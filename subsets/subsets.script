@@ -1,0 +1,33 @@
+[Gramps SuperTool script file]
+version=1
+
+[title]
+subsets
+
+[description]
+Etsii sukupuun henkilöistä erilliset osajoukot, niin että kunkin osajoukon jäsenet ovat sukua toisilleen, mutta eivät muiden osajoukkojen henkilöille.
+
+[category]
+People
+
+[initial_statements]
+@include subsets.py
+
+[statements]
+
+[filter]
+
+[expressions]
+
+[scope]
+selected
+
+[unwind_lists]
+False
+
+[commit_changes]
+False
+
+[summary_only]
+False
+
