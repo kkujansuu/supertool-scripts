@@ -5,7 +5,7 @@ version=1
 subsets
 
 [description]
-Etsii sukupuun henkilöistä erilliset osajoukot, niin että kunkin osajoukon jäsenet ovat sukua toisilleen, mutta eivät muiden osajoukkojen henkilöille.
+Finds non-connected subsets in the database
 
 [category]
 People
