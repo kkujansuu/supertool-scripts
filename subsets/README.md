@@ -17,6 +17,8 @@ Double-clicking on a row will open the person editor for the sample person.
 
 The connectedness is defined by relationships: a person's parents, children and spouses belong to the same subsets. 
 
+Run the script in the People view. The script always processes the complete database - it doesn't matter whether you choose "All objects", "Filtered objects" or "Selected objects".
+
 ### Example
 
 For example, in the sample database the script finds 105 separate partitions. The largest one has 1844 individuals:
