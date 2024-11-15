@@ -84,24 +84,31 @@ class Finder:
                 for cithandle in person.get_citation_list():
                     citation = self.db.get_citation_from_handle(cithandle)
                     if citation.page == "": continue
-                    for _, handle in db.find_backlink_handles(cithandle, ['Person']):
-                        self.handlesOfPeopleToBeProcessed.add(handle)
+                    for _, handle2 in db.find_backlink_handles(cithandle, ['Person']):
+                        if handle2 == person.handle: continue
+                        p2 = self.db.get_person_from_handle(handle2)
+                        if has_citation(p2, citation.handle): # accept only direct citations (Person -> Citation)
+                            self.handlesOfPeopleToBeProcessed.add(handle2)
 
         plist = []
         for handle in self.handlesOfPeopleAlreadyProcessed:
             person = self.db.get_person_from_handle(handle)
             plist.append( (person.gramps_id, handle) )
         return set(plist) 
+
+def has_citation(person, citationhandle):
+    return citationhandle in person.get_citation_list()
         
 sets = []
 all = set((p.gramps_id, p.handle) for p in db.iter_people())
 # print("all",len(all))
 
 while all:    
-    gid, handle = sorted(all)[0]
+    gid, handle = all.pop()
     finder = Finder(db)
     related = finder.findRelatedPeople(handle) #, use_events=True, use_citations=True)
     unrelated = all - related
+    gid, handle = min(related)
     sets.append((handle,related))
     all = unrelated
 
