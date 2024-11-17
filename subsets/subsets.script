@@ -13,6 +13,20 @@ People
 [initial_statements]
 @include subsets.py
 
+args = getargs(
+	use_events=("Use events", bool, False),
+	use_citations=("Use citations", bool, False),
+	use_associations=("Use associations", bool, False),
+	add_attributes=("Add attributes", bool, False),
+)
+
+find_subsets(
+	use_events=args.use_events,
+	use_citations=args.use_citations,
+	use_associations=args.use_associations,
+	add_attributes=args.add_attributes,
+)
+
 [statements]
 
 [filter]

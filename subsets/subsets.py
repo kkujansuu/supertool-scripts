@@ -16,7 +16,7 @@ class Finder:
                 spouse_handle = family.get_father_handle()
         return spouse_handle
     
-    def findRelatedPeople(self, handle, use_events=False, use_citations=False):
+    def findRelatedPeople(self, handle, use_events=False, use_citations=False, use_associations=False):
         self.handlesOfPeopleToBeProcessed = {handle}
         self.numberOfPeopleInDatabase = self.db.get_number_of_people()
         self.handlesOfPeopleAlreadyProcessed = set()
@@ -90,6 +90,12 @@ class Finder:
                         if has_citation(p2, citation.handle): # accept only direct citations (Person -> Citation)
                             self.handlesOfPeopleToBeProcessed.add(handle2)
 
+            if use_associations:
+                for pref in person.obj.get_person_ref_list():
+                    self.handlesOfPeopleToBeProcessed.add(pref.ref)
+                for _, handle in db.find_backlink_handles(person.handle, ['Person']):
+                    self.handlesOfPeopleToBeProcessed.add(handle)
+
         plist = []
         for handle in self.handlesOfPeopleAlreadyProcessed:
             person = self.db.get_person_from_handle(handle)
@@ -98,37 +104,48 @@ class Finder:
 
 def has_citation(person, citationhandle):
     return citationhandle in person.get_citation_list()
-        
-sets = []
-all = set((p.gramps_id, p.handle) for p in db.iter_people())
-# print("all",len(all))
 
-while all:    
-    gid, handle = all.pop()
-    finder = Finder(db)
-    related = finder.findRelatedPeople(handle) #, use_events=True, use_citations=True)
-    unrelated = all - related
-    gid, handle = min(related)
-    sets.append((handle,related))
-    all = unrelated
-
-# print("----------------------")
-result.set_headers(["Number of people", "Sample person ID", "Sample person"])
-for handle, related in sets:
-    #handle = related.pop()
-    #related.add(handle)
-    p = db.get_person_from_handle(handle)
-    person = PersonProxy(db, handle)
-    # print(f"{len(related):10} {person.gramps_id} {person.name}")
-    result.add_row([len(related), person.gramps_id, person.name], handle=person.handle)
+def find_subsets(sort_ids=True, use_events=False, use_citations=False, use_associations=False, add_attributes=False):
+    sets = []
+    all = set((p.gramps_id, p.handle) for p in db.iter_people())
     
+    while all:    
+        gid, handle = all.pop()
+        finder = Finder(db)
+        related = finder.findRelatedPeople(handle, 
+            use_events=use_events, use_citations=use_citations, use_associations=use_associations)
+        unrelated = all - related
+        gid, handle = min(related)
+        sets.append((handle,related))
+        all = unrelated
     
+    headers = []
+    if add_attributes: 
+        headers = ["Subset"]
+    headers.extend(["Number of people", "Sample person"])
+    result.set_headers(headers)
+    for n, (handle, related) in enumerate(sets, start=1):
+        p = db.get_person_from_handle(handle)
+        person = PersonProxy(db, handle)
+        row = []
+        if add_attributes:
+            subset = "subset-{n}".format(n=n)
+            set_attributes(related, "subset", subset)    
+            row = [subset]
+        row.extend([len(related), person.name])
+        result.add_row(row, obj=person)
     
-    
-    
-    
-    
-    
+def set_attributes(related, attrname, subset):
+    for (gid, handle) in related:
+        p = db.get_person_from_handle(handle)
+        for attr in p.get_attribute_list():
+            if attr.get_type() == attrname:
+                p.remove_attribute(attr)
+        attr = Attribute()
+        attr.set_type(attrname)
+        attr.set_value(subset)
+        p.add_attribute(attr)
+        db.commit_person(p, trans)
     
     
     
