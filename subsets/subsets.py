@@ -1,3 +1,5 @@
+import contextlib
+
 from supertool_engine import PersonProxy
 from supertool_engine import SupertoolException
 
@@ -121,17 +123,27 @@ def find_subsets(sort_ids=True, use_events=False, use_citations=False, use_assoc
         headers = ["Subset"]
     headers.extend(["Number of people", "Sample person"])
     result.set_headers(headers)
-    for n, (handle, related) in enumerate(sets, start=1):
-        p = db.get_person_from_handle(handle)
-        person = PersonProxy(db, handle)
-        row = []
-        if add_attributes:
-            subset = "subset-{n}".format(n=n)
-            set_attributes(related, "subset", subset)    
-            row = [subset]
-        row.extend([len(related), person.name])
-        result.add_row(row, obj=person)
     
+    with signals_disabled():
+        for n, (handle, related) in enumerate(sets, start=1):
+            p = db.get_person_from_handle(handle)
+            person = PersonProxy(db, handle)
+            row = []
+            if add_attributes:
+                subset = "subset-{n}".format(n=n)
+                set_attributes(related, "subset", subset)    
+                row = [subset]
+            row.extend([len(related), person.name])
+            result.add_row(row, obj=person)
+
+@contextlib.contextmanager
+def signals_disabled():
+    db.disable_signals()
+    try:
+        yield
+    finally:
+        db.enable_signals()
+        
 def set_attributes(related, attrname, subset):
     for (gid, handle) in related:
         if step():
