@@ -1,0 +1,37 @@
+[Gramps SuperTool script file]
+version=1
+
+[title]
+delete-subset-attributes
+
+[description]
+
+[category]
+People
+
+[initial_statements]
+n = 0
+
+[statements]
+for attr in person.get_attribute_list():
+	if attr.get_type() == "subset":
+		person.remove_attribute(attr)
+		n += 1
+
+[filter]
+
+[expressions]
+"{} attributes removed".format(n)
+
+[scope]
+all
+
+[unwind_lists]
+False
+
+[commit_changes]
+True
+
+[summary_only]
+True
+

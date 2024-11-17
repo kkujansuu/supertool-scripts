@@ -1,0 +1,34 @@
+[Gramps SuperTool script file]
+version=1
+
+[title]
+list-subset
+
+[description]
+
+[category]
+People
+
+[initial_statements]
+
+[statements]
+subset = dict(attributes).get("subset", "")
+
+[filter]
+subset == "subset-3"
+
+[expressions]
+name, subset
+
+[scope]
+all
+
+[unwind_lists]
+False
+
+[commit_changes]
+False
+
+[summary_only]
+False
+
