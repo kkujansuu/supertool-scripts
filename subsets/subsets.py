@@ -1,4 +1,5 @@
 from supertool_engine import PersonProxy
+from supertool_engine import SupertoolException
 
 # Code based on the "Not Related" tool
 
