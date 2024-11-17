@@ -40,14 +40,15 @@ class Finder:
             self.handlesOfPeopleAlreadyProcessed.add(handle)
             handlemap[handle] = person.gramps_id
 
-            # we have 4 things to do:  find (1) spouses, (2) parents, siblings(3), and (4) children
-
-            # step 1 -- spouses
+            # step 1 -- spouses and children
             for familyHandle in person.get_family_handle_list():
                 family = self.db.get_family_from_handle(familyHandle)
                 spouseHandle = self.find_spouse(person, family)
                 if spouseHandle:
                     self.handlesOfPeopleToBeProcessed.add(spouseHandle)
+                for childRef in family.get_child_ref_list():
+                    childHandle = childRef.ref
+                    self.handlesOfPeopleToBeProcessed.add(childHandle)
 
             # step 2 -- parents
             for familyHandle in person.get_parent_family_handle_list():
@@ -59,28 +60,14 @@ class Finder:
                 if motherHandle:
                     self.handlesOfPeopleToBeProcessed.add(motherHandle)
 
-            # step 3 -- siblings
-            for familyHandle in person.get_parent_family_handle_list():
-                family = self.db.get_family_from_handle(familyHandle)
-                for childRef in family.get_child_ref_list():
-                    childHandle = childRef.ref
-                    self.handlesOfPeopleToBeProcessed.add(childHandle)
-
-            # step 4 -- children
-            for familyHandle in person.get_family_handle_list():
-                family = self.db.get_family_from_handle(familyHandle)
-                for childRef in family.get_child_ref_list():
-                    childHandle = childRef.ref
-                    self.handlesOfPeopleToBeProcessed.add(childHandle)
-
-            # step 5 -- event participants
+            # step 3 -- event participants
             if use_events:
                 for eventRef in person.get_event_ref_list():
                     eventHandle = eventRef.ref
                     for _, handle in db.find_backlink_handles(eventHandle, ['Person']):
                         self.handlesOfPeopleToBeProcessed.add(handle)
 
-            # step 6 -- people having the same citation
+            # step 4 -- people having the same citation
             if use_citations:
                 for cithandle in person.get_citation_list():
                     citation = self.db.get_citation_from_handle(cithandle)
@@ -91,6 +78,7 @@ class Finder:
                         if has_citation(p2, citation.handle): # accept only direct citations (Person -> Citation)
                             self.handlesOfPeopleToBeProcessed.add(handle2)
 
+            # step 5 -- associations
             if use_associations:
                 for pref in person.obj.get_person_ref_list():
                     self.handlesOfPeopleToBeProcessed.add(pref.ref)
