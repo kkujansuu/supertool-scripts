@@ -33,7 +33,8 @@ class Finder:
             person = self.db.get_person_from_handle(handle)
 
             # if we get here, then we're dealing with someone new
-            step()
+            if step():
+                raise SupertoolException("canceled")
 
             # remember that we've now seen this person
             self.handlesOfPeopleAlreadyProcessed.add(handle)
@@ -106,6 +107,13 @@ def has_citation(person, citationhandle):
     return citationhandle in person.get_citation_list()
 
 def find_subsets(sort_ids=True, use_events=False, use_citations=False, use_associations=False, add_attributes=False):
+    total = db.get_number_of_people()
+    if add_attributes: 
+        total = 2*db.get_number_of_people()
+    progressmeter = step.__self__
+    progressmeter.set_pass(total=total)
+    step()
+
     sets = []
     all = set((p.gramps_id, p.handle) for p in db.iter_people())
     
@@ -137,6 +145,8 @@ def find_subsets(sort_ids=True, use_events=False, use_citations=False, use_assoc
     
 def set_attributes(related, attrname, subset):
     for (gid, handle) in related:
+        if step():
+            raise SupertoolException("canceled")
         p = db.get_person_from_handle(handle)
         for attr in p.get_attribute_list():
             if attr.get_type() == attrname:
