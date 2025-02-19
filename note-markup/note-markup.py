@@ -47,7 +47,7 @@ def show_note(note):
     texteditor.set_editable(False)
     texteditor.set_wrap_mode(Gtk.WrapMode.WORD)
     texteditor.set_text(note.get_styledtext())
-    scrolledwindow.set_size_request(600, 500)
+    scrolledwindow.set_size_request(600, 300)
     scrolledwindow.add(texteditor)
     c.add(scrolledwindow) #, True, True, 0)
 
