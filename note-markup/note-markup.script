@@ -1,0 +1,33 @@
+[Gramps SuperTool script file]
+version=1
+
+[title]
+note-markup
+
+[description]
+
+[category]
+Notes
+
+[initial_statements]
+@include note-markup.py
+
+[statements]
+show_note(note)
+
+[filter]
+
+[expressions]
+
+[scope]
+selected
+
+[unwind_lists]
+False
+
+[commit_changes]
+False
+
+[summary_only]
+False
+
