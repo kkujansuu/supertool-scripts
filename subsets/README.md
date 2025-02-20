@@ -11,14 +11,14 @@ There may be "islands" in your family tree. Islands are groups of people linked 
 
 This script will find these "islands". Technically these islands are called subsets or partitions.
 
-The script will display the number of people in each subset and a sample person from each set. The sample person's ID is show in the first column.
+The script will display the number of people in each subset and a sample person from each set. The sample person's ID is shown in the first column.
 
 Double-clicking on a row will open the person editor for the sample person. 
 
 
 The script can be run in any view. The script always processes the complete database - it doesn't matter whether you choose "All objects", "Filtered objects" or "Selected objects".
 
-The connectedness is by defined by relationships: a person's parents, children and spouses belong to the same subsets. But at startup the script allows the user also to choose the following options:
+The connectedness is defined by relationships: a person's parents, children and spouses belong to the same subsets. But at startup the script allows the user also to choose the following options:
 
 ![subsets](images/subsets-options.png)
 
@@ -28,7 +28,7 @@ The connectedness is by defined by relationships: a person's parents, children a
 
 * **Use associations** means that there is an association from one person to the other
 
-* **Add 'subset' attribute** means that the script will add an attribute named 'subset' for each person. The value of the attribute is the subset number (in format 'subset-123'). The subset numbers are assigned by the script and also displayed if this option is selected. See example below.
+* **Add 'subset' attribute** means that the script will add an attribute named 'subset' for each person. The value of the attribute is the subset number (in format 'subset-123'). The subset numbers are assigned by the script and also displayed if this option is selected. See the second example below.
 
 ### Example
 
@@ -42,7 +42,6 @@ If the **Add 'subset' attribute** is selected then the subset numbers are also d
 
 ![subsets](images/subsets-2.png)
 
-Note that setting the attributes can be quite slow.
 
 ### Listing people in a subset
 
@@ -51,6 +50,8 @@ You can list the individuals in a specific subset with the script 'list-subset':
 ![subsets](images/list-subset.png)
 
 The subset number should be set in the Filter section.
+
+You can also use the builtin filter rule 'People with the personal <attribute>'.
 
 ### Removing the subset attributes
 
