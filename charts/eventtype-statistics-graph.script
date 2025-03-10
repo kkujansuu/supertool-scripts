@@ -14,7 +14,7 @@ Events
 
 def draw(rows):
 	rows = sorted([list(x) for x in rows if x[1] > 0])
-	drawgraph(db.get_dbname(),"EventType statistics",["EventType"],rows)
+	drawgraph(db.get_dbname(), "EventType statistics", ["EventType"], rows, "PieChart")
 
 types = defaultdict(int)
 
