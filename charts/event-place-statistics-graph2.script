@@ -1,0 +1,62 @@
+[Gramps SuperTool script file]
+version=1
+
+[title]
+event-place-statistics-graph2
+
+[description]
+
+[category]
+Events
+
+[initial_statements]
+MIN_COUNT = 20
+
+@include chart.py
+
+class Data:
+	def __init__(self):
+		self.count = 0
+		self.birth_count = 0
+		self.death_count = 0
+		self.burial_count = 0
+		self.marriage_count = 0
+		self.other_count = 0
+
+def draw(data):
+	rows = sorted([(placename, d.birth_count, d.death_count, d.burial_count, d.marriage_count, d.other_count) for placename,d in data.items() if d.count >= MIN_COUNT])
+	drawgraph(db.get_dbname(), f"Event place statistics (min count: {MIN_COUNT})", ["Birth","Death","Burial", "Marriage", "Other"], rows)
+
+data = defaultdict(Data)
+
+[statements]
+if placename:
+	if self.type == 'Birth':
+		data[placename].birth_count += 1
+	elif self.type == 'Death':
+		data[placename].death_count += 1
+	elif self.type == 'Burial':
+		data[placename].burial_count += 1
+	elif self.type == 'Marriage':
+		data[placename].marriage_count += 1
+	else:
+		data[placename].other_count += 1
+	data[placename].count += 1
+
+[filter]
+
+[expressions]
+draw(data)
+
+[scope]
+all
+
+[unwind_lists]
+False
+
+[commit_changes]
+False
+
+[summary_only]
+True
+

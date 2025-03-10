@@ -1,0 +1,44 @@
+[Gramps SuperTool script file]
+version=1
+
+[title]
+birth-year-statistics-graph
+
+[description]
+
+[category]
+People
+
+[initial_statements]
+@include chart.py
+
+
+def draw(data):
+	drawgraph(db.get_dbname(), "Birth year statistics", ["Count"], sorted(data.items()))
+
+data = defaultdict(int)
+
+[statements]
+if birth.date:
+	birth_decade = birth.date.obj.get_ymd()[0] // 10
+	print(birth_decade)
+	year_range = f"{10*birth_decade:04}-{10*birth_decade+9:04}"
+	data[year_range] += 1
+
+[filter]
+
+[expressions]
+draw(data)
+
+[scope]
+all
+
+[unwind_lists]
+False
+
+[commit_changes]
+False
+
+[summary_only]
+True
+

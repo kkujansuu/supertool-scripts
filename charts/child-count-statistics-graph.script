@@ -1,0 +1,49 @@
+[Gramps SuperTool script file]
+version=1
+
+[title]
+child-count-statistics-graph
+
+[description]
+
+[category]
+Families
+
+[initial_statements]
+@include chart.py
+
+class Data:
+	def __init__(self):
+		self.sum_children = 0
+		self.count = 0
+
+def draw(data):
+	rows = sorted([(decade, (d.sum_children/d.count) if d.count else 0) for (decade, d) in data.items()])
+	drawgraph(db.get_dbname(), "Child count statistics by mother\'s birth date", ["Avg.childcount"], rows)
+
+data = defaultdict(Data)
+
+[statements]
+if mother and mother.birth.date:
+	birth_decade = mother.birth.date.obj.get_ymd()[0] // 10
+	year_range = f"{10*birth_decade:04}-{10*birth_decade+9:04}"
+	data[year_range].sum_children += len(children)
+	data[year_range].count += 1
+
+[filter]
+
+[expressions]
+draw(data)
+
+[scope]
+all
+
+[unwind_lists]
+False
+
+[commit_changes]
+False
+
+[summary_only]
+True
+

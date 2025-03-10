@@ -1,0 +1,54 @@
+[Gramps SuperTool script file]
+version=1
+
+[title]
+age-statistics-graph
+
+[description]
+
+[category]
+People
+
+[initial_statements]
+@include chart.py
+
+class Data:
+	def __init__(self):
+		self.m_count = 0
+		self.f_count = 0
+
+def draw(data):
+	rows = sorted([(agerange,d.m_count,d.f_count) for agerange,d in data.items()],
+		key=lambda x: int(x[0].split("-")[0]))
+	drawgraph(db.get_dbname(),"Age statistics",["M","F"],rows)
+
+data = defaultdict(Data)
+
+[statements]
+if birth.date and death.date:
+	age = (death.date.obj - birth.date.obj)[0] // 10
+	age = age*10
+	agerange = f"{age}-{age+9}"
+	if age >= 0 and age < 150:
+		if gender == 'M':
+			data[agerange].m_count += 1
+		if gender == 'F':
+			data[agerange].f_count += 1
+
+[filter]
+
+[expressions]
+draw(data)
+
+[scope]
+all
+
+[unwind_lists]
+False
+
+[commit_changes]
+False
+
+[summary_only]
+True
+

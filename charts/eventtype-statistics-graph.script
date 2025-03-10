@@ -1,0 +1,40 @@
+[Gramps SuperTool script file]
+version=1
+
+[title]
+eventtype-statistics-graph
+
+[description]
+
+[category]
+Events
+
+[initial_statements]
+@include chart.py
+
+def draw(rows):
+	rows = sorted([list(x) for x in rows if x[1] > 0])
+	drawgraph(db.get_dbname(),"EventType statistics",["EventType"],rows)
+
+types = defaultdict(int)
+
+[statements]
+types[str(type)] += 1
+
+[filter]
+
+[expressions]
+draw(types.items())
+
+[scope]
+all
+
+[unwind_lists]
+False
+
+[commit_changes]
+False
+
+[summary_only]
+True
+
