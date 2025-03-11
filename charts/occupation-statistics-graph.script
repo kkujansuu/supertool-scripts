@@ -1,0 +1,72 @@
+[Gramps SuperTool script file]
+version=1
+
+[title]
+occupation-statistics-graph
+
+[description]
+
+[category]
+Events
+
+[initial_statements]
+from collections import Counter
+
+START_YEAR = 1800
+END_YEAR = 1900
+SPAN = 25 # years
+NUM_OCCUPS = 6
+
+@include chart.py
+
+def draw(occups, data):
+	pprint(data)
+	x = occups.most_common(NUM_OCCUPS)
+	labels  = [label for (label,count) in x]
+	rows = []
+	for years, d in sorted(data.items()):
+		values = [d.occupations.get(label, 0) for label in labels]
+		row = (years, *values)
+		rows.append(row)
+	drawgraph(db.get_dbname(), "Occupation statistics", labels, rows)
+
+
+
+class Data:
+	years: str
+	occupations = None
+
+data = defaultdict(Data)
+occups = Counter()
+
+[statements]
+if type == 'Occupation' and date and description:
+	start_year = SPAN*(date.ymd[0] // SPAN)
+	end_year = start_year+SPAN-1
+	years = f"{start_year:04}-{end_year:04}"
+	if start_year >= START_YEAR and end_year <= END_YEAR:
+		if data[years].occupations is None:
+			data[years].occupations = {}
+		if description not in data[years].occupations:
+			data[years].occupations[description] = 0
+		data[years].years = years
+		data[years].occupations[description] += 1
+		occups[description] += 1
+
+[filter]
+
+[expressions]
+draw(occups, data)
+
+[scope]
+all
+
+[unwind_lists]
+False
+
+[commit_changes]
+False
+
+[summary_only]
+True
+

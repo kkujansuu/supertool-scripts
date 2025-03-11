@@ -10,13 +10,24 @@ Load a script into SuperTool, possibly adjust some parameters in the "Initializa
 
 ### Implementation details
 
-The scripts use the auxiliary code in <code>chart.py</code>. There is the function <code>drawgraph</code>. The function should be called with the arguments:
+The scripts use the auxiliary code in <code>chart.py</code> which contains the function <code>drawgraph</code>. The function should be called with the arguments:
 
     1. Header for the page. The examples use the database name.
     2. Title of the graph
     3. List of column names.
     4. The data to be displayed. A list of tuples (or lists). The tuples are (itemlabel, colvalue1, colvalue2, ...).
     5. The type of the chart. Default "ColumnChart". Possible values are at least "ColumnChart", "BarChart", "PieChart" and "LineChart".
+
+***
+Examples below:
+
+
+1. Place Types
+2. Event Types
+3. Event Places
+4. Age statistics
+5. Birth Years
+6. Occupation statistics
 
 ***
 
@@ -60,6 +71,7 @@ which gives:
 
 ![Charts](images/event-place-statistics-graph2.png)
 
+***
 
 ### Age statistics
 
@@ -69,11 +81,37 @@ Number of deaths by age and by gender. This should be run in the People category
 
 ![Charts](images/age-statistics.png)
 
+
+***
+
 ### Birth years
 
 https://github.com/kkujansuu/supertool-scripts/blob/main/charts/birth-year-statistics-graph.script
 
-Number of people birth year. This should be run in the People category.
+Number of people by birth decade. This should be run in the People category.
 
 ![Charts](images/birth-year-statistics.png)
+
+***
+
+### Occupation statistics
+
+https://github.com/kkujansuu/supertool-scripts/blob/main/charts/occupation-statistics-graph.script
+
+Number of people with the most common occupations by birth year. This should be run in the Events category.
+
+The script uses these constants defined in a the beginning of the script:
+
+	START_YEAR = 1800
+	END_YEAR = 1900
+	SPAN = 25 # years
+	NUM_OCCUPS = 6
+
+The script assumes that occupations are events of type Occupation and the occupation (e.g. "farmer") is stored in the description field of the event.
+
+The script finds NUM_OCCUPS most common occupations within the years START_YEAR - END_YEAR. Then it divides the year range in spans of SPAN years and displays the number of the occupations within each year span. Example: 
+ 
+![Charts](images/occupation-statistics.png)
+
+
 
