@@ -6,7 +6,7 @@ A collection of scripts for the Gramps SuperTool (https://github.com/Taapeli/iso
 
 https://github.com/kkujansuu/supertool-scripts/tree/main/charts
 
-Various charts generaed using the Google chart tools.
+Various charts generated using the Google chart tools.
 
 
 #### Note markup
