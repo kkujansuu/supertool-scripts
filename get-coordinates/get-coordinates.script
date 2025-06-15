@@ -1,0 +1,33 @@
+[Gramps SuperTool script file]
+version=1
+
+[title]
+get-coordinates
+
+[description]
+
+[category]
+Places
+
+[initial_statements]
+@include get-coordinates.py
+
+[statements]
+get_coordinates(self)
+
+[filter]
+
+[expressions]
+
+[scope]
+selected
+
+[unwind_lists]
+True
+
+[commit_changes]
+False
+
+[summary_only]
+False
+
